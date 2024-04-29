@@ -1,0 +1,343 @@
+create database dbcascadeddl261223
+use dbcascadeddl261223
+
+create table tblstudent
+(
+id int primary key identity,
+name varchar(50),
+age int,
+gender varchar(50),
+country varchar(50),
+state int,
+mobileno bigint
+)
+create table tblgender
+(
+gid int primary key identity,
+gname varchar(50)
+)
+insert into tblgender(gname)values('MALE')
+insert into tblgender(gname)values('FEMALE')
+insert into tblgender(gname)values('OTHERS')
+
+create table tblcountry
+(
+cid int primary key identity,
+cname varchar(50)
+)
+insert into tblcountry(cname)values('INDIA')
+insert into tblcountry(cname)values('PAKISTAN')
+insert into tblcountry(cname)values('CHINA')
+insert into tblcountry(cname)values('JAPAN')
+
+create table tblstate
+(
+sid int primary key identity,
+cid int,
+sname varchar(50)
+)
+select * from tblstudent
+select * from tblgender
+select * from tblcountry
+select * from tblstate
+select * from tblstate where cid=2
+--truncate table tblcountry
+
+insert into tblstate(cid,sname)values(1,'U.P')
+insert into tblstate(cid,sname)values(1,'BIHAR')
+insert into tblstate(cid,sname)values(1,'New Delhi')
+
+insert into tblstate(cid,sname)values(3,'Bijing')
+insert into tblstate(cid,sname)values(3,'Hong Kong')
+insert into tblstate(cid,sname)values(3,'Shanghai')
+
+insert into tblstate(cid,sname)values(2,'Lahore')
+insert into tblstate(cid,sname)values(2,'Karachi')
+insert into tblstate(cid,sname)values(2,'Punjan')
+insert into tblstate(cid,sname)values(2,'Sindh')
+
+insert into tblstate(cid,sname)values(4,'Tokio')
+insert into tblstate(cid,sname)values(4,'Hirosima')
+insert into tblstate(cid,sname)values(4,'Osaka')
+
+select * from tblstudent
+select * from tblcountry
+select * from tblgender
+select * from tblstate
+
+select * from tblstudent 
+join tblcountry on tblstudent.country=tblcountry.cid
+join tblgender on tblstudent.gender=tblgender.gid
+join tblstate on tblstudent.state=tblstate.sid
+
+truncate table tblcountry
+truncate table tblstate
+====================================================================================
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebRegCascadeddl.aspx.cs" Inherits="Cascadeddl261223.WebRegCascadeddl" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <table>
+                <tr>
+                    <td>Name:</td>
+                    <td><asp:TextBox runat="server" ID="txtname"></asp:TextBox></td>
+                </tr>
+
+                 <tr>
+                    <td>Age:</td>
+                    <td><asp:TextBox runat="server" ID="txtage"></asp:TextBox></td>
+                </tr>
+
+                 <tr>
+                    <td>Gender:</td>
+                    <td><asp:RadioButtonList runat="server" ID="rblgender" RepeatColumns="3"></asp:RadioButtonList></td>
+                </tr>
+
+                 <tr>
+                    <td>Country:</td>
+                    <td><asp:DropDownList runat="server" ID="ddlcountry" OnSelectedIndexChanged="ddlcountry_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList></td>
+                </tr>
+
+                 <tr>
+                    <td>State:</td>
+                    <td><asp:DropDownList runat="server" ID="ddlstate"></asp:DropDownList></td>
+                </tr>
+
+                 <tr>
+                    <td>Mbile No:</td>
+                    <td><asp:TextBox runat="server" ID="txtmobileno"></asp:TextBox></td>
+                </tr>
+
+                 <tr>
+                    <td></td>
+                    <td><asp:Button runat="server" ID="BtnSubmit" Text="Submit" OnClick="BtnSubmit_Click" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><asp:GridView runat="server" ID="GrdView" OnRowCommand="GrdView_RowCommand" AutoGenerateColumns="false">
+                        <Columns>
+                            <asp:TemplateField HeaderText="Name">
+                                <ItemTemplate>
+                                    <%#Eval("name") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                             <asp:TemplateField HeaderText="Age">
+                                <ItemTemplate>
+                                    <%#Eval("age") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                             <asp:TemplateField HeaderText="Gender">
+                                <ItemTemplate>
+                                    <%#Eval("gname") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                             <asp:TemplateField HeaderText="Country">
+                                <ItemTemplate>
+                                    <%#Eval("cname") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                             <asp:TemplateField HeaderText="State">
+                                <ItemTemplate>
+                                    <%#Eval("sname") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                             <asp:TemplateField HeaderText="Mobile No">
+                                <ItemTemplate>
+                                    <%#Eval("mobileno") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                             <asp:TemplateField>
+                                <ItemTemplate>
+                                 <asp:Button runat="server" ID="Btndelete" Text="Delete" CommandName="A" CommandArgument='<%#Eval("id") %>' />   
+                                </ItemTemplate>
+
+                            </asp:TemplateField>
+                             <asp:TemplateField>
+                                <ItemTemplate>
+                                    <asp:Button runat="server" ID="Btnedit" Text="Edit" CommandName="B" CommandArgument='<%#Eval("id") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        </asp:GridView></td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</body>
+</html>
+---------====================================================--------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data.SqlClient;
+using System.Data;
+
+namespace Cascadeddl261223
+{
+    public partial class WebRegCascadeddl : System.Web.UI.Page
+    {
+        SqlConnection con = new SqlConnection(@"server=DESKTOP-0CB69LE\SQLEXPRESS;database=dbcascadeddl261223;trusted_connection=true");
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if(!IsPostBack)
+            {
+                DispalyData();
+                DisplayCountry();
+                DisplayGender();
+                ddlstate.Items.Insert(0, new ListItem("--Select--", "0"));
+                ddlstate.Enabled = false;
+            }
+        }
+
+        protected void BtnSubmit_Click(object sender, EventArgs e)
+        {
+            //con.Open();
+            //SqlCommand cmd = new SqlCommand("insert into tblstudent(name,age,gender,country,state,mobileno)values('"+txtname.Text+"','"+txtage.Text+"','"+rblgender.SelectedValue+"','"+ddlcountry.SelectedValue+"','"+ddlstate.SelectedValue+"','"+txtmobileno.Text+"') ", con);
+            //cmd.ExecuteNonQuery();
+            //con.Close();
+            if(BtnSubmit.Text=="Submit")
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("insert into tblstudent(name,age,gender,country,state,mobileno)values('"+txtname.Text+"','"+txtage.Text+"','"+rblgender.SelectedValue+"','"+ddlcountry.SelectedValue+"','"+ddlstate.SelectedValue+"','"+txtmobileno.Text+"')", con);
+                cmd.ExecuteNonQuery();
+                con.Close();
+               
+            }
+            else if(BtnSubmit.Text=="Update")
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("update tblstudent set name='"+txtname.Text+"',age='"+txtage.Text+"',gender='"+rblgender.SelectedValue+"',country='"+ddlcountry.SelectedValue+"',state='"+ddlstate.SelectedValue+"',mobileno='"+txtmobileno.Text+"' where id='"+ViewState["KK"]+"' ",con);
+                cmd.ExecuteNonQuery();
+                con.Close();              
+                BtnSubmit.Text = "Submit";
+                ClearData();
+            }
+            DispalyData();
+        }
+
+        protected void GrdView_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if(e.CommandName=="A")
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("delete from tblstudent where id='"+e.CommandArgument+"' ",con);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            else if(e.CommandName=="B")
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("select * from tblstudent where id='"+e.CommandArgument+"'",con);
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                sda.Fill(dt);
+                con.Close();
+                if (dt.Rows.Count > 0) 
+                {
+                    txtname.Text = dt.Rows[0]["name"].ToString();
+                    txtage.Text = dt.Rows[0]["age"].ToString();
+                    rblgender.SelectedValue = dt.Rows[0]["gender"].ToString();
+                    ddlcountry.SelectedValue = dt.Rows[0]["country"].ToString();
+                    //ddlstate.SelectedValue = dt.Rows[0]["state"].ToString();
+                    DisplayState();
+                    txtmobileno.Text = dt.Rows[0]["mobileno"].ToString();
+                    ViewState["KK"] = e.CommandArgument;
+                    BtnSubmit.Text = "Update";
+                }
+            }
+            DispalyData();
+        }
+        public void DispalyData()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("select * from tblstudent join tblcountry on tblstudent.country = tblcountry.cid join tblgender on tblstudent.gender = tblgender.gid join tblstate on tblstudent.state = tblstate.sid",con);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            con.Close();
+            GrdView.DataSource = dt;
+            GrdView.DataBind();
+        }
+        public void DisplayGender()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("select * from tblgender",con);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            con.Close();
+            rblgender.DataValueField = "gid";
+            rblgender.DataTextField = "gname";
+            rblgender.DataSource = dt;
+            rblgender.DataBind();
+        }
+
+        public void DisplayCountry()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("select * from tblcountry",con);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            con.Close();
+            ddlcountry.DataValueField = "cid";
+            ddlcountry.DataTextField = "cname";
+            ddlcountry.DataSource = dt;
+            ddlcountry.DataBind();
+            ddlcountry.Items.Insert(0,new ListItem("--select--","0"));
+        }
+        public void DisplayState()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("select * from tblstate where cid='"+ddlcountry.SelectedValue+"'",con);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            con.Close();
+            if (dt.Rows.Count > 0)
+            {
+                ddlstate.DataValueField = "sid";
+                ddlstate.DataTextField = "sname";
+                ddlstate.DataSource = dt;
+                ddlstate.Enabled = true;
+                ddlstate.DataBind();
+                ddlstate.Items.Insert(0, new ListItem("--select--", "0"));
+            }
+           
+           
+        }
+
+        public void ClearData()
+        {
+            txtname.Text = "";
+            txtage.Text = "";
+            txtmobileno.Text = "";
+            rblgender.ClearSelection();
+            ddlcountry.SelectedValue = "0";
+            ddlstate.SelectedValue = "0";
+           // ddlstate.Items.Insert(0,new ListItem("--select--","0"));
+        }
+       
+
+        protected void ddlcountry_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DisplayState();
+        }
+    }
+}
