@@ -1,0 +1,631 @@
+===============Asp.net Curd With SP All Operation==========
+create database Reg010124
+use Reg010124
+
+create table tblemployee
+(
+id int primary key identity,
+name varchar(50),
+email varchar(50),
+password varchar(50)
+)
+select * from tblemployee
+
+create table tblregst
+(
+id int primary key identity,
+name varchar(50),
+age int,
+gender varchar(50),
+salary int,
+country varchar(50),
+state int,
+department varchar(50)
+)
+
+create table tblgender
+(
+gid int primary key identity,
+gname varchar(50)
+)
+insert into tblgender('Male') ('Female') ('Others')
+
+insert into tblgender(gname)values('Male')
+insert into tblgender(gname)values('Female')
+insert into tblgender(gname)values('Others')
+
+create table tblcountry
+(
+cid int primary key identity,
+cname varchar(50)
+)
+insert into tblcountry(cname)values('India','Pakistan','China','Japan')
+insert into tblcountry(cname)values('India')
+insert into tblcountry(cname)values('Pakistan')
+insert into tblcountry(cname)values('China')
+insert into tblcountry(cname)values('Japan')
+
+create table tblstate
+(
+sid int primary key identity,
+cid int,
+sname varchar(50)
+)
+insert into tblstate(cid,sname)values(1,'U.P')
+insert into tblstate(cid,sname)values(1,'Bihar')
+insert into tblstate(cid,sname)values(1,'Delhi')
+
+insert into tblstate(cid,sname)values(2,'Islamabad')
+insert into tblstate(cid,sname)values(2,'Gujrat')
+insert into tblstate(cid,sname)values(2,'Lahore')
+
+insert into tblstate(cid,sname)values(3,'Buhan')
+insert into tblstate(cid,sname)values(3,'hainan')
+
+insert into tblstate(cid,sname)values(4,'herosima')
+insert into tblstate(cid,sname)values(4,'nagasika')
+insert into tblstate(cid,sname)values(4,'taskand')
+insert into tblstate(cid,sname)values(4,'Tokio')
+
+create table tbldepartment
+(
+did int primary key identity,
+dname varchar(50),
+)
+insert into tbldepartment(dname)values('H.R')
+insert into tbldepartment(dname)values('I.T')
+insert into tbldepartment(dname)values('Account')
+insert into tbldepartment(dname)values('Technical')
+
+select * from tbldepartment
+select * from tblregst
+select * from tblcountry
+select * from tblstate where cid=2
+select * from tblgender
+
+--truncate table tblstate
+select * from tblregst
+join tblcountry on tblregst.country=tblcountry.cid
+join tblstate on tblregst.state=tblstate.sid
+join tblgender on tblregst.gender=tblgender.gid
+join tbldepartment on tblregst.department=tbldepartment.did
+
+--truncate table tblregst
+select * from tblregst join tblcountry on tblregst.country=tblcountry.cid join tblstate on tblregst.state=tblstate.sid join tblgender on tblregst.gender=tblgender.gid join tbldepartment on tblregst.department=tbldepartment.did
+
+create table Userprofile
+(
+id int primary key identity,
+name varchar(50),
+age int,
+contactno bigint,
+email varchar(50),
+address varchar(50)
+)
+
+select * from Userprofile
+
+alter procedure Sp_Userinsert
+--value or variable is @ symbol
+@name varchar(50),
+@age int,
+@contactno bigint,
+@email varchar(50),
+@address varchar(50)
+as
+begin
+insert into Userprofile(name,age,contactno,email,address)values(@name,@age,@contactno,@email,@address)
+end
+
+create procedure Sp_UserDelete
+@id int
+as
+begin
+delete from Userprofile where id=@id
+end
+
+create procedure Sp_UserSelect
+as
+begin
+select * from Userprofile
+end
+
+alter procedure Sp_UserUpdate
+@name varchar(50),
+@age int,
+@contactno varchar(50),
+@email varchar(50),
+@address varchar(50),
+@id int
+as
+begin
+update Userprofile set name=@name,age=@age,contactno=@contactno,email=@email,address=@address where id=@id
+end
+
+--truncate table Userprofile
+select * from Userprofile
+
+alter procedure Sp_UserEdit
+@id int
+as
+begin
+select * from Userprofile where id=@id
+end
+-----------all in one procedure------
+create table tbluserinformation
+(
+id int primary key identity,
+personname varchar(50),
+age int,
+email varchar(50),
+address varchar(50),
+contactno bigint
+)
+
+select * from tbluserinformation
+-------Multiple Action in One Procedure-------
+alter procedure InsertUpdateDeleteSelect
+@action varchar(50)=null,
+@id int=0,
+@personname varchar(50)=null,
+@age int=0,
+@email varchar(50)=null,
+@address varchar(50)=null,
+@contactno bigint=0,
+@image varchar(50)=null
+as
+begin
+--------first condition----
+if(@action='Uinsert')
+begin
+insert into tbluserinformation(personname,age,email,address,contactno,image)values(@personname,@age,@email,@address,@contactno,@image)
+end
+
+else if(@action='Uupdate')
+begin
+update tbluserinformation set personname=@personname,age=@age,address=@address,contactno=@contactno,image=@image where id=@id
+end
+
+else if(@action='Ueditdata')
+begin
+select * from tbluserinformation where id=@id
+end
+
+else if(@action='Udelete')
+begin
+delete from tbluserinformation where id =@id
+end
+
+else if(@action='Uselect')
+begin
+select * from tbluserinformation
+end
+
+end
+
+use Reg010124
+
+create procedure UserSearch
+@search varchar(50)
+as
+begin
+select * from tblemployee where name=@search
+end
+
+alter procedure Sp_usersearch
+@ss varchar(50)=null
+as
+begin
+--select * from Userprofile  where name=@ss
+select * from Userprofile where name like '%' +@ss
+end
+
+sp_helptext Sp_UserSelect
+
+sp_helptext InsertUpdateDeleteSelect
+insert into tbluserinformation(personname,age,email,address,contactno)values(@personname,@age,@email,@address,@contactno)  
+alter table tbluserinformation add image varchar(50) 
+
+select * from tbluserinformation
+----------=================All Curd Preocedure 2nd Part===========------------------
+use Reg010124
+create table userApplication
+(
+id int primary key identity,
+name varchar(50),
+age int,
+gender varchar(50),
+salary int,
+country varchar(50),
+state int,
+address varchar(50)
+)
+ create table usergender
+ (
+ gid int primary key identity,
+ gname varchar(50)
+ )
+
+insert into usergender (gname) values('Male')
+insert into usergender (gname) values('Female')
+insert into usergender (gname) values('Others')
+
+ select * from usergender
+ --truncate table usergender
+
+ create table usercountry
+ (
+ cid int primary key identity,
+ cname varchar(50)
+ )
+ select * from usercountry
+ insert into usercountry (cname)values('India')
+ insert into usercountry (cname)values('Pakistan')
+ insert into usercountry (cname)values('Nepal')
+
+ create table userstate
+ (
+ sid int primary key identity,
+ cid int,
+ sname varchar(50)
+ )
+
+insert into userstate(cid,sname)values(1,'New Delhi')
+insert into userstate(cid,sname)values(1,'Bihar')
+insert into userstate(cid,sname)values(1,'Uttar Pradesh')
+
+insert into userstate(cid,sname)values(2,'Lahore')
+insert into userstate(cid,sname)values(2,'Gujarat')
+insert into userstate(cid,sname)values(2,'Krachi')
+
+insert into userstate(cid,sname)values(3,'Kathmandu')
+insert into userstate(cid,sname)values(3,'Koshi')
+insert into userstate(cid,sname)values(3,'Bagmati')
+
+select * from userstate
+
+insert into userApplication
+
+alter procedure sp_UserInsertUpdateDeleteSelect
+@action varchar(50)=null,
+@name varchar(50)=null,
+@age int=0,
+@gender varchar(50)=null,
+@salary int=0,
+@country varchar(50)=null,
+@state int=0,
+@address varchar(50)=null,
+@id int=0
+as
+begin
+if(@action='userinsert')
+begin
+insert into userApplication (name,age,gender,salary,country,state,address)values(@name,@age,@gender,@salary,@country,@state,@address)
+end
+
+else if(@action='userupdate')
+begin
+update userApplication set name=@name,age=@age,gender=@gender,salary=@salary,country=@country,state=@state,address=@address where id=@id
+end
+
+else if(@action='userdelete')
+begin
+delete userApplication where id=@id
+end
+
+else if(@action='useredit')
+begin
+select * from userApplication where id=@id
+end
+
+else if(@action='userselect')
+begin
+--select * from userApplication
+select * from userApplication as a  join usercountry as c on c.cid=a.country join userstate as s on s.sid=a.state join usergender as g on g.gid=a.gender
+end
+
+end
+
+select * from usergender
+select * from usercountry
+select * from userstate where cid=1
+select * from userApplication
+--truncate table userApplication
+select * from usercountry
+select * from userApplication as a 
+join usercountry as c on c.cname=a.country
+join userstate as s on s.sname=a.state
+join usergender as g on g.gname=a.gender
+
+--select * from userApplication as a  join usercountry as c on c.cname=a.country join userstate as s on s.sname=a.state join usergender as g on g.gname=a.gender
+select * from userApplication as a 
+join usercountry as c on c.cid=a.country
+join userstate as s on s.sid=a.state
+join usergender as g on g.gid=a.gender
+=====================================================================================================
+<%@ Page Title="" Language="C#" MasterPageFile="~/Default.Master" AutoEventWireup="true" CodeBehind="EmployeeAppli.aspx.cs" Inherits="ProjectApp010124.EmployeeAppli" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td><asp:TextBox runat="server" ID="txtname"></asp:TextBox></td>
+        </tr>
+        
+        <tr>
+            <td>Age:</td>
+            <td><asp:TextBox runat="server" ID="txtage"></asp:TextBox></td>
+        </tr>
+        
+        <tr>
+            <td>Gender:</td>
+            <td><asp:RadioButtonList runat="server" ID="rblgender" RepeatDirection="Horizontal"></asp:RadioButtonList></td>
+        </tr>
+        
+        <tr>
+            <td>Salary:</td>
+            <td><asp:TextBox runat="server" ID="txtsalary"></asp:TextBox></td>
+        </tr>
+        
+        <tr>
+            <td>Counrty:</td>
+            <td><asp:DropDownList runat="server" ID="ddlcountry" OnSelectedIndexChanged="ddlcountry_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList></td>
+        </tr>
+        
+        <tr>
+            <td>State:</td>
+            <td><asp:DropDownList runat="server" ID="ddlstate"></asp:DropDownList></td>
+        </tr>
+        
+        <tr>
+            <td>Address:</td>
+            <td><asp:TextBox runat="server" ID="txtaddress"></asp:TextBox></td>
+        </tr>
+        
+        <tr>
+            <td></td>
+            <td><asp:Button runat="server" ID="btnsubmit" Text="Submit" OnClick="btnsubmit_Click" /></td>
+        </tr>
+        
+        <tr>
+            <td></td>
+            <td><asp:GridView runat="server" ID="GrdView" OnRowCommand="GrdView_RowCommand" AutoGenerateColumns="false">
+                <Columns>
+                     <asp:TemplateField HeaderText="Id">
+                        <ItemTemplate>
+                            <%#Eval("id") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Name">
+                        <ItemTemplate>
+                            <%#Eval("name") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+
+                    <asp:TemplateField HeaderText="Age">
+                        <ItemTemplate>
+                            <%#Eval("age") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Gender">
+                        <ItemTemplate>
+                            <%#Eval("gname") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+
+                    <asp:TemplateField HeaderText="salary">
+                        <ItemTemplate>
+                            <%#Eval("salary") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+
+                    <asp:TemplateField HeaderText="country">
+                        <ItemTemplate>
+                            <%#Eval("cname") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+
+                    <asp:TemplateField HeaderText="State">
+                        <ItemTemplate>
+                            <%#Eval("sname") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+
+                    <asp:TemplateField HeaderText="Address">
+                        <ItemTemplate>
+                            <%#Eval("address") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+
+                    <asp:TemplateField >
+                        <ItemTemplate>
+                            <asp:LinkButton runat="server" Text="Delete" ID="btndelete" CommandName="A" CommandArgument='<%#Eval("id") %>'></asp:LinkButton>
+                            <asp:LinkButton runat="server" Text="Edit" ID="btnedit" CommandName="B" CommandArgument='<%#Eval("id") %>'></asp:LinkButton>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+                </asp:GridView></td>
+        </tr>            
+    </table>
+</asp:Content>
+=====================================================================================
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data.SqlClient;
+using System.Data;
+using System.Configuration;
+
+namespace ProjectApp010124
+{
+    public partial class EmployeeAppli : System.Web.UI.Page
+    {
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["abc"].ConnectionString);
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if(!IsPostBack)
+            {
+                DisplayRecord();
+                DisplayGender();               
+                DisplayCountry();
+                ddlstate.Enabled = false;
+                ddlstate.Items.Insert(0,new ListItem("--select--","0"));
+            }
+        }
+
+        protected void btnsubmit_Click(object sender, EventArgs e)
+        {
+            if(btnsubmit.Text=="Submit")
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("sp_UserInsertUpdateDeleteSelect",con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@action", "userinsert");
+                cmd.Parameters.AddWithValue("name",txtname.Text);
+                cmd.Parameters.AddWithValue("age",txtage.Text);
+                cmd.Parameters.AddWithValue("gender", rblgender.SelectedValue);
+                cmd.Parameters.AddWithValue("salary", txtsalary.Text);
+                cmd.Parameters.AddWithValue("country",ddlcountry.SelectedValue);
+                cmd.Parameters.AddWithValue("state", ddlstate.SelectedValue);
+                cmd.Parameters.AddWithValue("address", txtaddress.Text);
+                cmd.ExecuteNonQuery();
+                con.Close();
+                ClearData();
+            }
+            else if(btnsubmit.Text=="Update")
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("sp_UserInsertUpdateDeleteSelect", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@action", "userupdate");
+                cmd.Parameters.AddWithValue("@id", ViewState["vs"]);
+                cmd.Parameters.AddWithValue("name", txtname.Text);
+                cmd.Parameters.AddWithValue("age", txtage.Text);
+                cmd.Parameters.AddWithValue("gender", rblgender.SelectedValue);
+                cmd.Parameters.AddWithValue("salary", txtsalary.Text);
+                cmd.Parameters.AddWithValue("country", ddlcountry.SelectedValue);
+                cmd.Parameters.AddWithValue("state", ddlstate.SelectedValue);
+                cmd.Parameters.AddWithValue("address", txtaddress.Text);
+                cmd.ExecuteNonQuery();
+                con.Close();
+                ClearData();
+            }
+            DisplayRecord();
+        }
+
+        protected void GrdView_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if(e.CommandName=="A")
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("sp_UserInsertUpdateDeleteSelect", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@action", "userdelete");
+                cmd.Parameters.AddWithValue("@id",e.CommandArgument);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            else if(e.CommandName=="B")
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("sp_UserInsertUpdateDeleteSelect", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@action", "useredit");
+                cmd.Parameters.AddWithValue("@id",e.CommandArgument);
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                sda.Fill(dt);
+                con.Close();
+                txtname.Text = dt.Rows[0]["name"].ToString();
+                txtage.Text = dt.Rows[0]["age"].ToString();
+                rblgender.SelectedValue = dt.Rows[0]["gender"].ToString();
+                txtsalary.Text = dt.Rows[0]["salary"].ToString();
+                ddlcountry.SelectedValue = dt.Rows[0]["country"].ToString();
+                //ddlstate.SelectedValue = dt.Rows[0]["state"].ToString();
+                DisplayState();
+                txtaddress.Text = dt.Rows[0]["address"].ToString();
+                ViewState["vs"] = e.CommandArgument;
+                btnsubmit.Text = "Update";
+            }
+            DisplayRecord();
+        }
+
+        protected void ddlcountry_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DisplayState();
+        }
+        public void DisplayGender()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("select * from usergender", con);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            con.Close();
+            rblgender.DataValueField = "gid";
+            rblgender.DataTextField = "gname";
+            rblgender.DataSource = dt;
+            rblgender.DataBind();
+        }
+
+        public void ClearData()
+        {
+            txtname.Text = "";
+            txtage.Text = "";
+            txtsalary.Text = "";
+            txtaddress.Text = "";
+            rblgender.ClearSelection();
+            ddlcountry.SelectedValue = "0";
+            ddlstate.SelectedValue = "0";
+        }
+
+        public void DisplayCountry()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("select * from usercountry", con);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            con.Close();
+            ddlcountry.DataValueField = "cid";
+            ddlcountry.DataTextField = "cname";
+            ddlcountry.DataSource = dt;
+            ddlcountry.DataBind();
+            ddlcountry.Items.Insert(0,new ListItem("--select--","0"));
+        }
+
+        public void DisplayState()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("select * from userstate where cid='"+ddlcountry.SelectedValue+"'", con);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            con.Close();
+            ddlstate.DataValueField = "sid";
+            ddlstate.DataTextField = "sname";
+            ddlstate.DataSource = dt;
+            ddlstate.DataBind();
+            ddlstate.Items.Insert(0,new ListItem("--select--", "0"));
+            ddlstate.Enabled = true;
+        }
+
+        public void DisplayRecord()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("sp_UserInsertUpdateDeleteSelect", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@action", "userselect");
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt); 
+            con.Close();
+            GrdView.DataSource = dt;
+            GrdView.DataBind();
+        }
+    }
+}
