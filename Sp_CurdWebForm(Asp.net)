@@ -150,3 +150,390 @@ select * from tblemployee
 join tblcountry on tblemployee.country=tblcountry.cid
 join tblstate on tblemployee.state=tblstate.sid
 join tblgender on tblemployee.gender=tblgender.gid
+========================FrontEnd(Asp.net)====================================
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="RegistartionForm.aspx.cs" Inherits="CurdMachineTest.RegistartionForm" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <table>
+                <tr>
+                    <td>FirstName</td>
+                    <td><asp:TextBox runat="server" ID="txtFname"></asp:TextBox></td>
+                </tr>
+                 <tr>
+                    <td>LastName</td>
+                    <td><asp:TextBox runat="server" ID="txtLname"></asp:TextBox></td>
+                </tr>
+                 <tr>
+                    <td>Gender</td>
+                    <td><asp:RadioButtonList ID="rblgender" RepeatColumns="3" runat="server">
+                       <%-- <asp:ListItem Text="Male" Value="1"></asp:ListItem>
+                        <asp:ListItem Text="FeMale" Value="2"></asp:ListItem>
+                        <asp:ListItem Text="Others" Value="3"></asp:ListItem>--%>
+                        </asp:RadioButtonList></td>
+                </tr>
+                 <tr>
+                    <td>MobileNo</td>
+                    <td><asp:TextBox runat="server" ID="txtmobileno" TextMode="Phone"></asp:TextBox></td>
+                </tr>
+                 <tr>
+                    <td>Email</td>
+                    <td><asp:TextBox runat="server" ID="txtemail" TextMode="Email"></asp:TextBox></td>
+                </tr>
+                 <tr>
+                    <td>Country</td>
+                    <td><asp:DropDownList runat="server" ID="ddlcountry" AutoPostBack="true" OnSelectedIndexChanged="ddlcountry_SelectedIndexChanged">
+                        <asp:ListItem Value="0">-select country-</asp:ListItem>
+                        </asp:DropDownList></td>
+                </tr>
+                 <tr>
+                    <td>State</td>
+                    <td><asp:DropDownList runat="server" ID="ddlstate">
+                        <asp:ListItem Value="0">--select State-</asp:ListItem>
+                        </asp:DropDownList>
+                    </td>
+                </tr>
+                 <%--<tr>
+                    <td>Status</td>
+                    <td><asp:CheckBox runat="server" ID="cbstatus" /></td>
+                </tr>--%>
+                 <tr>
+                    <td><asp:CheckBox ID="cbTandC" runat="server" /></td>
+                    <td>I Accept Terms and condition</td>
+                </tr>
+                 <tr>
+                    <td></td>
+                    <td><asp:Button ID="btnsubmit" runat="server" Text="Submit" OnClick="btnsubmit_Click" OnClientClick="return ValidationJS();" /></td>
+                </tr>
+
+                 <tr>
+                    <td></td>
+                    <td><asp:GridView runat="server" ID="grdview" OnRowCommand="grdview_RowCommand" AutoGenerateColumns="false">
+                        <Columns>
+
+                         <asp:TemplateField HeaderText="E id">
+                                <ItemTemplate>
+                                    <%#Eval("eid") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="F Name">
+                                <ItemTemplate>
+                                    <%#Eval("firstname") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+ 
+                            <asp:TemplateField HeaderText="L Name">
+                                <ItemTemplate>
+                                    <%#Eval("lastname") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                         
+                            <asp:TemplateField HeaderText="Gender">
+                                <ItemTemplate>
+                                    <%#Eval("gname") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                          
+                            <asp:TemplateField HeaderText="Ph No">
+                                <ItemTemplate>
+                                    <%#Eval("contactno") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Email">
+                                <ItemTemplate>
+                                    <%#Eval("Email") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        
+                            <asp:TemplateField HeaderText="Country">
+                                <ItemTemplate>
+                                    <%#Eval("cname") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                           
+                            <asp:TemplateField HeaderText="State">
+                                <ItemTemplate>
+                                    <%#Eval("sname") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            
+                            <asp:TemplateField HeaderText="T&C">
+                                <ItemTemplate>
+                                    <%#Eval("TandC") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                          
+                            <asp:TemplateField>
+                                <ItemTemplate>
+                                  <asp:LinkButton runat="server" ID="lnkedit" Text="Edit" CommandName="Cmdedit" CommandArgument='<%#Eval("eid") %>'></asp:LinkButton>
+                                  <asp:LinkButton runat="server" ID="lnkdelete" Text="Delete" CommandName="CmdDelet" CommandArgument='<%#Eval("eid")%>'></asp:LinkButton>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                        </Columns>
+                        </asp:GridView></td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</body>
+</html>
+<script src="Scripts/jquery-3.4.1.slim.min.js"></script>
+ <script>
+        function ValidationJS() {
+        var fname = document.getElementById('<%= txtFname.ClientID %>').value.trim();
+        var lname = document.getElementById('<%= txtLname.ClientID %>').value.trim();
+        var mobile = document.getElementById('<%= txtmobileno.ClientID %>').value.trim();
+        var email = document.getElementById('<%= txtemail.ClientID %>').value.trim();
+        var country = document.getElementById('<%= ddlcountry.ClientID %>').value;
+        var state = document.getElementById('<%= ddlstate.ClientID %>').value;
+        var termsAccepted = document.getElementById('<%= cbTandC.ClientID %>').checked;
+
+    // Basic validation
+    if (fname === '') {
+        alert('Please enter First Name');
+    return false;
+        }
+    if (lname === '') {
+        alert('Please enter Last Name');
+    return false;
+        }
+    if (mobile === '') {
+        alert('Please enter Mobile Number');
+    return false;
+        }
+    if (email === '') {
+        alert('Please enter Email Address');
+    return false;
+        }
+    if (country === '0') {
+        alert('Please select Country');
+    return false;
+        }
+    if (state === '0') {
+        alert('Please select State');
+    return false;
+        }
+    if (!termsAccepted) {
+        alert('Please accept Terms and Conditions');
+    return false;
+        }
+
+    // Additional validation rules can be added here
+
+    return true; // Form will be submitted if all validations pass
+    }
+</script>
+  ===========================Backend(C#)=======================
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+
+namespace CurdMachineTest
+{
+    public partial class RegistartionForm : System.Web.UI.Page
+    {
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["Defaultconn"].ConnectionString);
+        
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                DisplayCountry();
+                //DisplayState();
+                DispalyGender();
+                ddlcountry.Items.Insert(0,new ListItem("select country", "0"));
+                //ddlstate.Items.Insert(0,new ListItem("Select State--","0"));
+                ShowAllRecord();
+                Reset();
+            }
+        }
+
+       public void DisplayCountry()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("sp_countrydata", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            cmd.ExecuteNonQuery();
+            con.Close();
+            ddlcountry.DataTextField = "cname";
+            ddlcountry.DataValueField = "cid";
+            ddlcountry.DataSource = dt;
+            ddlcountry.Items.Insert(0,new ListItem("select Country","0"));
+            //ddlcountry.Items.Insert(0,"--Select Country");
+            ddlcountry.DataBind();
+        }
+        public void DisplayState()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("sp_statedata", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@cid",ddlcountry.SelectedValue);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            con.Close();
+            ddlstate.DataTextField = "sname";
+            ddlstate.DataValueField = "sid";
+            ddlstate.DataSource = dt;
+            ddlstate.Items.Insert(0, new ListItem("--select--", "0"));
+            //ddlstate.Items.Insert(0,"select state");
+            ddlstate.DataBind();
+        }
+
+        public void DispalyGender()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("sp_genderdata", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            con.Close();
+            rblgender.DataTextField = "gname";
+            rblgender.DataValueField = "gid";
+            rblgender.DataSource = dt;
+            rblgender.DataBind();
+        }
+
+        protected void ddlcountry_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DisplayState();
+        }
+
+        protected void btnsubmit_Click(object sender, EventArgs e)
+        {
+            if (btnsubmit.Text=="Submit")
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("sp_InsertUpdate", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("firstname", txtFname.Text);
+                cmd.Parameters.AddWithValue("lastname", txtLname.Text);
+                cmd.Parameters.AddWithValue("gender", rblgender.SelectedValue);
+                cmd.Parameters.AddWithValue("contactno", txtmobileno.Text);
+                cmd.Parameters.AddWithValue("email", txtemail.Text);
+                cmd.Parameters.AddWithValue("country", ddlcountry.SelectedValue);
+                cmd.Parameters.AddWithValue("state", ddlstate.SelectedValue);
+                cmd.Parameters.AddWithValue("TandC", cbTandC.Checked);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            else
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("sp_InsertUpdate", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("eid", ViewState["eid"]);
+                cmd.Parameters.AddWithValue("firstname",txtFname.Text);
+                cmd.Parameters.AddWithValue("lastname",txtLname.Text);
+                cmd.Parameters.AddWithValue("gender",rblgender.SelectedValue);
+                cmd.Parameters.AddWithValue("contactno",txtmobileno.Text);
+                cmd.Parameters.AddWithValue("email",txtemail.Text);
+                cmd.Parameters.AddWithValue("country",ddlcountry.SelectedValue);
+                cmd.Parameters.AddWithValue("state",ddlstate.SelectedValue);
+                cmd.Parameters.AddWithValue("TandC",cbTandC.Checked);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            ShowAllRecord();
+            Reset();
+        }
+
+        protected void grdview_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if(e.CommandName== "CmdDelet")
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("sp_DeleteRecord", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@eid",e.CommandArgument);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            else
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("sp_Editrecord", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@eid",e.CommandArgument);
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                sda.Fill(dt);
+                con.Close();
+                txtFname.Text = dt.Rows[0]["firstname"].ToString();
+                txtLname.Text = dt.Rows[0]["lastname"].ToString();
+                rblgender.SelectedValue = dt.Rows[0]["gender"].ToString();
+                ddlcountry.SelectedValue = dt.Rows[0]["country"].ToString();
+                DisplayState();
+               // ddlstate.SelectedValue = dt.Rows[0]["state"].ToString();
+                //cbTandC.Checked = dt.Rows[0]["TandC"].ToString();
+                txtemail.Text = dt.Rows[0]["Email"].ToString();
+                txtmobileno.Text = dt.Rows[0]["contactno"].ToString();
+                ViewState["eid"] = e.CommandArgument;
+                btnsubmit.Text = "Update";
+                // Convert TandC column value to boolean and set the checkbox
+                bool tandcValue;
+                if (bool.TryParse(dt.Rows[0]["TandC"].ToString(), out tandcValue))
+                {
+                    cbTandC.Checked = tandcValue;
+                }
+                else
+                {
+                    // Default to false if conversion fails
+                    cbTandC.Checked = false;
+                }
+
+            }
+            ShowAllRecord();
+        }
+
+        public void ShowAllRecord()
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("sp_showAlldata", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            con.Close();
+            grdview.DataSource = dt;
+            grdview.DataBind();
+        }
+
+        public void Reset()
+        {
+            txtFname.Text = "";
+            txtLname.Text = "";
+            txtemail.Text = "";
+            txtmobileno.Text = "";
+            rblgender.ClearSelection();
+            //ddlcountry.SelectedIndex = 0;
+            //ddlstate.SelectedIndex = 0;
+            cbTandC.Checked=false;
+        }
+    }
+}
+================Connection(Web.config)=================
+  <connectionStrings>
+    <add name="Defaultconn" connectionString="server=DESKTOP-0CB69LE\SQLEXPRESS;database=db_TestCurd;Trusted_Connection=true"/>
+  </connectionStrings>
